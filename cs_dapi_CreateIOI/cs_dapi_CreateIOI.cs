@@ -45,7 +45,7 @@ namespace com.bloomberg.ioi.samples
         private static readonly Name ERROR_INFO = new Name("ErrorInfo");
         private static readonly Name CREATE_IOI = new Name("CreateIOI");
 
-        private string d_emsx;
+        private string d_ioi;
         private string d_host;
         private int d_port;
 
@@ -73,7 +73,7 @@ namespace com.bloomberg.ioi.samples
             // and the values to be used by the SessionOptions object
             // to identify IP/port of the back-end process.
 
-            d_emsx = "//blp/ioiapi-beta-request";
+            d_ioi = "//blp/ioiapi-beta-request";
             d_host = "localhost";
             d_port = 8194;
         }
@@ -147,7 +147,7 @@ namespace com.bloomberg.ioi.samples
                 if (msg.MessageType.Equals(SESSION_STARTED))
                 {
                     System.Console.WriteLine("Session started...");
-                    session.OpenServiceAsync(d_emsx);
+                    session.OpenServiceAsync(d_ioi);
                 }
                 else if (msg.MessageType.Equals(SESSION_STARTUP_FAILURE))
                 {
@@ -165,8 +165,8 @@ namespace com.bloomberg.ioi.samples
             {
                 if (msg.MessageType.Equals(SERVICE_OPENED))
                 {
-                    System.Console.WriteLine("EMSX Service opened... Sending Authorization requests");
-                    sendCreateIOI(session, d_emsx);
+                    System.Console.WriteLine("ioi Service opened... Sending request");
+                    sendCreateIOI(session, d_ioi);
                 }
                 else if (msg.MessageType.Equals(SERVICE_OPEN_FAILURE))
                 {
@@ -211,9 +211,9 @@ namespace com.bloomberg.ioi.samples
             }
         }
 
-        private void sendCreateIOI(Session session, String emsxSvc)
+        private void sendCreateIOI(Session session, String ioiSvc)
         {
-            Service service = session.GetService(emsxSvc);
+            Service service = session.GetService(ioiSvc);
             Request request = service.CreateRequest("createIoi");
 
             Element ioi = request.GetElement("ioi");
@@ -256,7 +256,7 @@ namespace com.bloomberg.ioi.samples
             bid.GetElement("size").GetElement("quantity").SetValue(2000);
             bid.GetElement("referencePrice").SetElement("price", 202.155);
             bid.GetElement("referencePrice").SetElement("currency", "GBP");
-            bid.SetElement("notes", "offer notes");
+            bid.SetElement("notes", "bid notes");
 
             // Set the offer
             Element offer = ioi.GetElement("offer");
